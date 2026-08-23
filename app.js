@@ -91,9 +91,9 @@ function calculer() {
         const hasRacines = document.getElementById('hasRacines').checked;
         const hasFruits = document.getElementById('hasFruits').checked;
         const hasFeuilles = document.getElementById('hasFeuilles').checked;
-
         if (methode === 'microonde') {
-            stepList.innerHTML += `<li>Utiliser un plat adapté au micro-ondes avec cloche.</li>`;
+            //plat sécurisé au micro-ondes
+            stepList.innerHTML += `<li>Utiliser un plat en VERRE ou CÉRAMIQUE (jamais de métal) avec une cloche micro-ondes.</li>`;
             if (hasRacines) {
                 phases.push({ name: "Phase 1 : Mettre RACINES (Micro-ondes)", dur: Math.round(180 * coefDecoupe), activeHeat: true });
                 stepList.innerHTML += `<li>Étape 1 : Passer les racines au micro-ondes avec un fond d'eau.</li>`;
@@ -106,7 +106,9 @@ function calculer() {
             phases.push({ name: "Phase Finale : Repos hermétique sous cloche", dur: Math.round(360 * coefDecoupe), activeHeat: false });
 
         } else {
+            // Casseroles et poêles en Inox pour les autres modes (induction / gaz)
             stepList.innerHTML += `<li>Utiliser le récipient en inox à fond épais avec son couvercle.</li>`;
+            
             if (hasRacines) {
                 phases.push({ name: "Phase 1 : Mettre les RACINES", dur: Math.round(240 * coefDecoupe), activeHeat: true });
                 stepList.innerHTML += `<li>Étape 1 : Mettre les racines/patates, démarrer à ébullition.</li>`;
