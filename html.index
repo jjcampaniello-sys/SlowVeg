@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VeggieWatts - Cuisson Éco-Légumes</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            --primary: #27ae60;
+            --primary-dark: #1e8449;
+            --red: #c0392b;
+            --bg: #f4f9f4;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+        }
+
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 15px; background: var(--bg); color: var(--text); font-family: Arial, sans-serif; }
+        .container { width: 100%; max-width: 500px; margin: 0 auto; background: var(--card-bg); border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        h1 { margin: 0 0 10px; font-size: 24px; text-align: center; color: var(--primary-dark); }
+        .about-link { display: block; text-align: center; margin-bottom: 20px; color: var(--primary); font-weight: bold; text-decoration: none; padding: 6px; background: #eafaf1; border-radius: 8px; }
+        .group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 6px; font-weight: bold; font-size: 14px; }
+        select, input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; background: #fff; }
+        
+        .mode-type { display: flex; gap: 8px; margin-bottom: 15px; }
+        .mode-btn { flex: 1; padding: 10px; border: 1px solid #ccc; background: #fff; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; font-size: 13px; }
+        .mode-btn.active { background: var(--primary); color: white; border-color: var(--primary-dark); }
+
+        .timer-display { font-size: 48px; font-weight: bold; text-align: center; margin: 20px 0 10px; color: var(--primary-dark); font-family: monospace; }
+        .step-banner { text-align: center; font-size: 14px; font-weight: bold; color: #e67e22; margin-bottom: 10px; min-height: 20px; }
+        .btn { display: block; width: 100%; padding: 14px; border: none; border-radius: 10px; background: var(--primary); color: white; font-size: 18px; font-weight: bold; cursor: pointer; }
+        
+        .steps-box { background: #f8f9fa; border-left: 4px solid var(--primary); padding: 12px 15px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+        .steps-box ul { margin: 0; padding-left: 20px; }
+        .steps-box li { margin-bottom: 6px; font-size: 14px; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; background: #eafaf1; padding: 12px; border-radius: 10px; text-align: center; }
+        .stat-card div:first-child { font-size: 12px; color: #555; }
+        .stat-card div:last-child { font-size: 16px; font-weight: bold; color: var(--primary-dark); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🥦 VeggieWatts</h1>
+    
+    <a href="readme.html" class="about-link">📖 Principes de cuisson des légumes</a>
+
+    <!-- Choix du Mode : Mono-Légume ou Mélange / Échelonnage -->
+    <label>Type de recette :</label>
+    <div class="mode-type">
+        <button id="btnMono" class="mode-btn active" onclick="setRecipeType('mono')">🥦 Un seul légume</button>
+        <button id="btnMulti" class="mode-btn" onclick="setRecipeType('multi')">🍲 Mélange échelonné</button>
+    </div>
+
+    <!-- Mode de cuisson global -->
+    <div class="group">
+        <label for="methode">Mode de cuisson :</label>
+        <select id="methode" onchange="calculer()">
+            <option value="vapeur">🫕 Vapeur / Fond d'eau étouffé</option>
+            <option value="eau">🍲 À l'eau (Poches & Abondance)</option>
+            <option value="poele">🍳 Poêle / Wok (Flash vapeur)</option>
+            <option value="soupe">🥣 Soupe / Velouté (Grande masse)</option>
+            <option value="four">🔥 Four (Chaleur résiduelle enfermée)</option>
+            <option value="microonde">⚡ Micro-ondes (Etouffée express)</option>
+        </select>
+    </div>
+
+    <!-- Options Mono-Légume -->
+    <div id="mono-options" class="group">
+        <label for="catLegume">Famille de légume :</label>
+        <select id="catLegume" onchange="calculer()">
+            <option value="feuilles">🥬 Feuilles & Fleurs (Épinards, Brocolis, Courgettes)</option>
+            <option value="fruits">🍅 Fruits & Chairs (Poivrons, Aubergines, Potimarron)</option>
+            <option value="racines">🥕 Racines & Bulbes (Carottes, Patates, Navets)</option>
+            <option value="legumineuses">🫘 Légumineuses (Lentilles, Pois chiches trempés)</option>
+        </select>
+    </div>
+
+    <!-- Options Mélange Échelonné -->
+    <div id="multi-options" class="group" style="display:none;">
+        <p style="font-size: 12px; color: #666; margin-top:0;">L'application va synchroniser l'ajout successif des ingrédients :</p>
+        <label><input type="checkbox" id="hasRacines" checked onchange="calculer()"> 🥕 Contient des Racines / Denses</label>
+        <label><input type="checkbox" id="hasFruits" checked onchange="calculer()"> 🍅 Contient des Fruits / Tendres</label>
+        <label><input type="checkbox" id="hasFeuilles" checked onchange="calculer()"> 🥬 Contient des Feuilles / Fragiles</label>
+    </div>
+
+    <!-- Découpe et Quantité -->
+    <div class="group">
+        <label for="decoupe">Taille de découpe :</label>
+        <select id="decoupe" onchange="calculer()">
+            <option value="fin">Fin / Brunoise / Râpé (&lt; 1cm)</option>
+            <option value="moyen" selected>Moyen / Rondelles / Dés (1 à 2cm)</option>
+            <option value="gros">Gros morceaux / Entier (&gt; 3cm)</option>
+        </select>
+    </div>
+
+    <div class="group">
+        <label for="poids">Masse totale des légumes (grammes) :</label>
+        <input type="number" id="poids" value="500" step="50" min="50" oninput="calculer()">
+    </div>
+
+    <!-- Instructions générées -->
+    <div class="steps-box">
+        <strong>📋 Étapes de cuisson passive :</strong>
+        <ul id="prepSteps"></ul>
+    </div>
+
+    <div id="stepBanner" class="step-banner"></div>
+    <div class="timer-display" id="disp">00:00</div>
+    <button id="btn" class="btn" onclick="toggle()">Démarrer la cuisson</button>
+
+    <!-- Statistiques d'économies -->
+    <div class="stats-grid">
+        <div class="stat-card"><div>Énergie</div><div><span id="totalWh">0</span> Wh</div></div>
+        <div class="stat-card"><div>Économie</div><div><span id="totalEur">0.00</span> €</div></div>
+        <div class="stat-card"><div>CO₂ évité</div><div><span id="totalCo2">0</span> g</div></div>
+    </div>
+
+    <span id="ecoWh" style="display:none;">0</span>
+    <span id="ecoEur" style="display:none;">0</span>
+</div>
+
+<script>
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+}
+</script>
+<script src="app.js"></script>
+</body>
+</html>
