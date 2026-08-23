@@ -29,7 +29,6 @@ function calculer() {
         const cat = document.getElementById('catLegume').value;
         let tActif = 0, tPassif = 0;
 
-        // Base de temps (secondes)
         if (cat === 'feuilles') { tActif = 60; tPassif = 180; }
         else if (cat === 'fruits') { tActif = 180; tPassif = 600; }
         else if (cat === 'racines') { tActif = 300; tPassif = 900; }
@@ -42,8 +41,8 @@ function calculer() {
             tActif = Math.max(30, Math.round(tActif * 0.5)); 
             tPassif = Math.round(tPassif * 0.6); 
 
-            stepList.innerHTML += `<li>Placer les légumes dans un plat en VERRE ou CÉRAMIQUE (sans métal) avec 2-3 c.à.s d'eau.</li>`;
-            stepList.innerHTML += `<li>Couvrir avec une cloche plastique ou un couvercle adapté.</li>`;
+            stepList.innerHTML += `<li>Placer les légumes dans un plat en VERRE ou CÉRAMIQUE (jamais de métal) avec 2-3 c.à.s d'eau.</li>`;
+            stepList.innerHTML += `<li>Couvrir avec une cloche plastique adaptée.</li>`;
             stepList.innerHTML += `<li>Chauffer à pleine puissance pendant ${Math.floor(tActif/60)} min ${tActif%60} s.</li>`;
             stepList.innerHTML += `<li><strong>LAISSER REPOSER SANS OUVRIR</strong> (la vapeur piégée termine la cuisson).</li>`;
 
@@ -59,7 +58,7 @@ function calculer() {
             phases.push({ name: "Cuisson Passive (Four éteint)", dur: tPassif, activeHeat: false });
 
         } else if (methode === 'poele') {
-            stepList.innerHTML += `<li>Saisir les légumes dans une poêle/wok en inox avec un filet d'huile (1 à 2 min).</li>`;
+            stepList.innerHTML += `<li>Saisir les légumes dans une poêle/wok avec un filet d'huile (1 à 2 min).</li>`;
             stepList.innerHTML += `<li>Ajouter 3 cuillères à soupe d'eau pour créer un flash de vapeur.</li>`;
             stepList.innerHTML += `<li>Mettre le couvercle et <strong>COUPER LE FEU</strong>.</li>`;
             
@@ -68,7 +67,7 @@ function calculer() {
 
         } else if (methode === 'soupe') {
             tPassif += 300;
-            stepList.innerHTML += `<li>Porter le bouillon à ébullition dans votre faitout en inox sous couvercle.</li>`;
+            stepList.innerHTML += `<li>Porter le bouillon à ébullition dans votre faitout inox sous couvercle.</li>`;
             stepList.innerHTML += `<li><strong>COUPEZ LE FEU</strong>. L'inertie du liquide cuit les légumes à cœur avant de mixer.</li>`;
             
             phases.push({ name: "Cuisson Active (Ébullition)", dur: tActif, activeHeat: true });
@@ -90,7 +89,7 @@ function calculer() {
         const hasFeuilles = document.getElementById('hasFeuilles').checked;
 
         if (methode === 'microonde') {
-            stepList.innerHTML += `<li>Utiliser un plat en VERRE ou CÉRAMIQUE (pas de métal) muni d'une cloche.</li>`;
+            stepList.innerHTML += `<li>Placer les légumes dans un plat en VERRE ou CÉRAMIQUE (jamais de métal) muni d'une cloche.</li>`;
             
             if (hasRacines) {
                 phases.push({ name: "Phase 1 : Mettre RACINES (Micro-ondes)", dur: Math.round(180 * coefDecoupe), activeHeat: true });
@@ -98,18 +97,31 @@ function calculer() {
             }
             if (hasFruits) {
                 phases.push({ name: "Phase 2 : Ajouter FRUITS / CHAIRS", dur: Math.round(120 * coefDecoupe), activeHeat: true });
-                stepList.innerHTML += `<li>Étape 2 : Ajouter les légumes de densité moyenne et relancer la chauffe.</li>`;
+                stepList.innerHTML += `<li>Étape 2 : Ajouter les légumes de densité moyenne et relancer la chauffe sous cloche.</li>`;
             }
             if (hasFeuilles) {
                 stepList.innerHTML += `<li>Étape 3 : Ajouter les légumes fragiles / feuilles, <strong>ARRÊTER LE MICRO-ONDES</strong> et fermer la cloche.</li>`;
             } else {
-                stepList.innerHTML += `<li>Étape 3 : <strong>ARRÊTER LE MICRO-ONDES</strong> et laisser fermé.</li>`;
+                stepList.innerHTML += `<li>Étape 3 : <strong>ARRÊTER LE MICRO-ONDES</strong> et laisser fermé sous cloche.</li>`;
             }
 
             phases.push({ name: "Phase Finale : Repos hermétique sous cloche", dur: Math.round(360 * coefDecoupe), activeHeat: false });
 
+        } else if (methode === 'four') {
+            stepList.innerHTML += `<li>Utiliser un plat allant au four muni d'un couvercle ou papier d'aluminium.</li>`;
+            if (hasRacines) {
+                phases.push({ name: "Phase 1 : Racines au four", dur: Math.round(600 * coefDecoupe), activeHeat: true });
+                stepList.innerHTML += `<li>Étape 1 : Enfourner les racines à 200°C dans le plat couvert.</li>`;
+            }
+            if (hasFruits || hasFeuilles) {
+                phases.push({ name: "Phase 2 : Ajouter le reste des légumes", dur: Math.round(300 * coefDecoupe), activeHeat: true });
+                stepList.innerHTML += `<li>Étape 2 : Ajouter les autres légumes, re-couvrir et <strong>ÉTEINDRE LE FOUR</strong>.</li>`;
+            }
+            phases.push({ name: "Phase Finale : Repos four éteint", dur: Math.round(900 * coefDecoupe), activeHeat: false });
+
         } else {
-            stepList.innerHTML += `<li>Utiliser un faitout ou casserole en inox à fond épais avec son couvercle.</li>`;
+            // Modes Casserole / Poêle / Vapeur (Inox)
+            stepList.innerHTML += `<li>Utiliser un faitout ou une casserole en inox à fond épais avec son couvercle.</li>`;
             
             if (hasRacines) {
                 phases.push({ name: "Phase 1 : Mettre les RACINES", dur: Math.round(240 * coefDecoupe), activeHeat: true });
