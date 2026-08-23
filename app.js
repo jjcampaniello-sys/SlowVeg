@@ -11,11 +11,14 @@ function setRecipeType(type) {
     document.getElementById('btnMulti').classList.toggle('active', type === 'multi');
     document.getElementById('mono-options').style.display = type === 'mono' ? 'block' : 'none';
     document.getElementById('multi-options').style.display = type === 'multi' ? 'block' : 'none';
+    
+    // Forcer la remise à zéro des états et recalculer immédiatement
     calculer();
 }
 
 function calculer() {
-    const methode = document.getElementById('methode').value;
+    const methodeSelect = document.getElementById('methode');
+    const methode = methodeSelect ? methodeSelect.value : 'vapeur';
     const decoupe = document.getElementById('decoupe').value;
     const poids = Math.max(50, parseFloat(document.getElementById('poids').value) || 500);
     const stepList = document.getElementById('prepSteps');
@@ -41,8 +44,8 @@ function calculer() {
             tActif = Math.max(30, Math.round(tActif * 0.5)); 
             tPassif = Math.round(tPassif * 0.6); 
 
-            stepList.innerHTML += `<li>Placer les légumes dans un plat en VERRE ou CÉRAMIQUE (jamais de métal) avec 2-3 c.à.s d'eau.</li>`;
-            stepList.innerHTML += `<li>Couvrir avec une cloche plastique adaptée.</li>`;
+            stepList.innerHTML += `<li>Placer les légumes dans un plat en VERRE ou CÉRAMIQUE (sans métal) avec 2-3 c.à.s d'eau.</li>`;
+            stepList.innerHTML += `<li>Couvrir impérativement avec une cloche plastique.</li>`;
             stepList.innerHTML += `<li>Chauffer à pleine puissance pendant ${Math.floor(tActif/60)} min ${tActif%60} s.</li>`;
             stepList.innerHTML += `<li><strong>LAISSER REPOSER SANS OUVRIR</strong> (la vapeur piégée termine la cuisson).</li>`;
 
