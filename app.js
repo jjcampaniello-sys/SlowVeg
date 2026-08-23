@@ -50,7 +50,8 @@ else if (cat === 'surgeles') { tActif = 120; tPassif = 240; }
 
             stepList.innerHTML += `<li>Placer les légumes dans un plat en VERRE ou CÉRAMIQUE (sans métal) avec 2-3 c.à.s d'eau.</li>`;
             stepList.innerHTML += `<li>Couvrir impérativement avec une cloche plastique.</li>`;
-            stepList.innerHTML += `<li>Chauffer à pleine puissance pendant ${Math.floor(tActif/60)} min ${tActif%60} s.</li>`;
+            stepList.innerHTML += `<li>⚡ Puissance requise : <strong>800W</strong> (durées calibrées pour cette puissance — ajustez le temps si votre micro-ondes est différent).</li>`;
+            stepList.innerHTML += `<li>Chauffer 800W pendant ${Math.floor(tActif/60)} min ${tActif%60} s.</li>`;
             stepList.innerHTML += `<li><strong>LAISSER REPOSER SANS OUVRIR</strong> (la vapeur piégée termine la cuisson).</li>`;
 
             phases.push({ name: "Phase 1 : Émission d'ondes (Chauffe)", dur: tActif, activeHeat: true });
@@ -97,7 +98,7 @@ else if (cat === 'surgeles') { tActif = 120; tPassif = 240; }
 
         if (methode === 'microonde') {
             stepList.innerHTML += `<li>Placer les légumes dans un plat en VERRE ou CÉRAMIQUE (jamais de métal) muni d'une cloche.</li>`;
-            
+            stepList.innerHTML += `<li>⚡ Puissance requise : <strong>800W</strong> (durées calibrées pour cette puissance — ajustez le temps si votre micro-ondes est différent).</li>`;
             if (hasRacines) {
                 phases.push({ name: "Phase 1 : Mettre RACINES (Micro-ondes)", dur: Math.round(180 * coefDecoupe), activeHeat: true });
                 stepList.innerHTML += `<li>Étape 1 : Passer les racines au micro-ondes avec 2 c.à.s d'eau sous cloche.</li>`;
