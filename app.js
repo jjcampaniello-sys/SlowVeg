@@ -26,6 +26,9 @@ function calculer() {
     let coefDecoupe = decoupe === 'fin' ? 0.7 : (decoupe === 'gros' ? 1.4 : 1.0);
     phases = [];
     stepList.innerHTML = "";
+    if (recipeType === 'mono' && document.getElementById('catLegume').value === 'surgeles') {
+    stepList.innerHTML += `<li>💡 <strong>Conseil :</strong> ne pas décongeler au préalable. La vapeur ou le micro-ondes donnent les meilleurs résultats pour les surgelés${methode === 'four' ? ' — le four est peu adapté ici (préchauffe énergivore pour un temps de cuisson court)' : ''}.</li>`;
+}
     let whSaved = Math.round((poids / 500) * 180);
 
     if (recipeType === 'mono') {
@@ -35,7 +38,8 @@ function calculer() {
         if (cat === 'feuilles') { tActif = 60; tPassif = 180; }
         else if (cat === 'fruits') { tActif = 180; tPassif = 600; }
         else if (cat === 'racines') { tActif = 300; tPassif = 900; }
-        else if (cat === 'legumineuses') { tActif = 600; tPassif = 1800; whSaved += 200; }
+else if (cat === 'legumineuses') { tActif = 600; tPassif = 1800; whSaved += 200; }
+else if (cat === 'surgeles') { tActif = 120; tPassif = 240; }
 
         tActif = Math.round(tActif * coefDecoupe);
         tPassif = Math.round(tPassif * coefDecoupe);
