@@ -68,6 +68,14 @@
         </select>
     </div>
 
+    <!-- Options Mélange Échelonné (Ajout de onchange="calculer()" sur chaque case) -->
+    <div id="multi-options" class="group" style="display:none;">
+        <p style="font-size: 12px; color: #666; margin-top:0;">L'application va synchroniser l'ajout successif des ingrédients :</p>
+        <label><input type="checkbox" id="hasRacines" checked onchange="calculer()"> 🥕 Contient des Racines / Denses</label>
+        <label><input type="checkbox" id="hasFruits" checked onchange="calculer()"> 🍅 Contient des Fruits / Tendres</label>
+        <label><input type="checkbox" id="hasFeuilles" checked onchange="calculer()"> 🥬 Contient des Feuilles / Fragiles</label>
+    </div>
+
     <!-- Options Mono-Légume -->
     <div id="mono-options" class="group">
         <label for="catLegume">Famille de légume :</label>
@@ -79,13 +87,7 @@
         </select>
     </div>
 
-    <!-- Options Mélange Échelonné -->
-    <div id="multi-options" class="group" style="display:none;">
-        <p style="font-size: 12px; color: #666; margin-top:0;">L'application va synchroniser l'ajout successif des ingrédients :</p>
-        <label><input type="checkbox" id="hasRacines" checked onchange="calculer()"> 🥕 Contient des Racines / Denses</label>
-        <label><input type="checkbox" id="hasFruits" checked onchange="calculer()"> 🍅 Contient des Fruits / Tendres</label>
-        <label><input type="checkbox" id="hasFeuilles" checked onchange="calculer()"> 🥬 Contient des Feuilles / Fragiles</label>
-    </div>
+
 
     <!-- Découpe et Quantité -->
     <div class="group">
