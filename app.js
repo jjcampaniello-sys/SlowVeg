@@ -229,7 +229,12 @@ function enregistrerEconomies() {
     localStorage.setItem('slowveg_totals', JSON.stringify(totals));
     afficherTotals();
 }
-
+function resetTotals() {
+    if (confirm("Réinitialiser l'historique d'économies ?")) {
+        localStorage.removeItem('ecocook_totals');
+        displayTotals();
+    }
+}
 function afficherTotals() {
     const totals = JSON.parse(localStorage.getItem('slowveg_totals') || '{"wh":0,"eur":0,"co2":0}');
     document.getElementById('totalWh').innerText = Math.round(totals.wh);
