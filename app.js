@@ -205,6 +205,13 @@ function toggle() {
         inter = setInterval(tick, 1000);
     }
 }
+async function requestWakeLock() {
+    try { if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
+}
+
+function releaseWakeLock() {
+    if (wakeLock !== null) { wakeLock.release(); wakeLock = null; }
+}
 
 function declencherSignalSonore(txt) {
     if ('speechSynthesis' in window) {
