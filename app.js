@@ -229,17 +229,17 @@ function enregistrerEconomies() {
     localStorage.setItem('slowveg_totals', JSON.stringify(totals));
     afficherTotals();
 }
-function resetTotals() {
-    if (confirm("Réinitialiser l'historique d'économies ?")) {
-        localStorage.removeItem('ecocook_totals');
-        displayTotals();
-    }
-}
+
 function afficherTotals() {
     const totals = JSON.parse(localStorage.getItem('slowveg_totals') || '{"wh":0,"eur":0,"co2":0}');
     document.getElementById('totalWh').innerText = Math.round(totals.wh);
     document.getElementById('totalEur').innerText = totals.eur.toFixed(2);
     document.getElementById('totalCo2').innerText = Math.round(totals.co2);
 }
-
+function resetTotals() {
+    if (confirm("Réinitialiser l'historique d'économies ?")) {
+        localStorage.removeItem('ecocook_totals');
+        displayTotals();
+    }
+}
 window.onload = () => { afficherTotals(); calculer(); };
