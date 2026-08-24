@@ -238,8 +238,8 @@ function afficherTotals() {
 }
 function resetTotals() {
     if (confirm("Réinitialiser l'historique d'économies ?")) {
-        localStorage.removeItem('ecocook_totals');
-        displayTotals();
+        localStorage.removeItem('slowveg_totals'); // Clé corrigée
+        afficherTotals(); // Nom de fonction corrigé
     }
 }
 window.onload = () => { afficherTotals(); calculer(); };
