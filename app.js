@@ -203,15 +203,36 @@ function toggle() {
         b.style.background = "var(--red)";
         endTimestamp = Date.now() + sec * 1000;
         inter = setInterval(tick, 1000);
+         requestWakeLock(); // <-- Active le verrou quand le chrono tourne
     }
 }
+// Demande le verrouillage de l'écran
 async function requestWakeLock() {
-    try { if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
+    if (!('wakeLock' in navigator)) return;
+    try { 
+        wakeLock = await navigator.wakeLock.request('screen');
+        console.log("WakeLock activé : l'écran restera allumé.");
+    } catch (err) {
+        console.error(`Erreur WakeLock: ${err.message}`);
+    }
 }
 
+// Libère le verrouillage
 function releaseWakeLock() {
-    if (wakeLock !== null) { wakeLock.release(); wakeLock = null; }
+    if (wakeLock !== null) { 
+        wakeLock.release(); 
+        wakeLock = null; 
+        console.log("WakeLock libéré.");
+    }
 }
+
+// Réactiver le WakeLock automatiquement si l'utilisateur revient sur l'application pendant la cuisson
+document.addEventListener('visibilitychange', async () => {
+    if (active && wakeLock !== null && document.visibilityState === 'visible') {
+        await requestWakeLock();
+    }
+});
+
 
 function declencherSignalSonore(txt) {
     if ('speechSynthesis' in window) {
