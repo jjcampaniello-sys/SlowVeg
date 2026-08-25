@@ -89,9 +89,17 @@ function calculer() {
             phases.push({ name: "Cuisson Active (Ébullition)", dur: tActif, activeHeat: true });
             phases.push({ name: "Cuisson Passive (Masse chaude)", dur: tPassif, activeHeat: false });
 
+        } else if (methode === 'eau') {
+            stepList.innerHTML += `<li>Plonger les légumes dans une grande quantité d'eau bouillante salée.</li>`;
+            stepList.innerHTML += `<li>Maintenir l'ébullition ${Math.round(tActif/60)} min sous couvercle.</li>`;
+            stepList.innerHTML += `<li><strong>COUPEZ LE FEU et égouttez rapidement</strong> pour limiter la perte de vitamines hydrosolubles.</li>`;
+
+            phases.push({ name: "Cuisson Active (Eau bouillante)", dur: tActif, activeHeat: true });
+            phases.push({ name: "Cuisson Passive (Repos avant égouttage)", dur: tPassif, activeHeat: false });
+
         } else {
-            // Vapeur / À l'eau (défaut)
-            stepList.innerHTML += `<li>Placer les légumes dans une casserole inox à fond épais avec un fond d'eau.</li>`;
+            // Vapeur / fond d'eau étouffé (défaut)
+            stepList.innerHTML += `<li>Placer les légumes dans une casserole inox à fond épais avec un fond d'eau (1-2 cm).</li>`;
             stepList.innerHTML += `<li>Maintenir l'ébullition douce ${Math.round(tActif/60)} min sous couvercle.</li>`;
             stepList.innerHTML += `<li><strong>COUPEZ LE FEU</strong> et laissez étouffer.</li>`;
 
@@ -170,6 +178,23 @@ function calculer() {
                 stepList.innerHTML += `<li>Étape 3 : <strong>COUPER LE FEU</strong> et couvrir.</li>`;
             }
             phases.push({ name: "Phase Finale : Repos (Masse chaude)", dur: Math.round(900 * coefDecoupe), activeHeat: false });
+
+        } else if (methode === 'eau') {
+            stepList.innerHTML += `<li>Utiliser une grande casserole d'eau bouillante salée.</li>`;
+            if (hasRacines) {
+                phases.push({ name: "Phase 1 : Mettre les RACINES", dur: Math.round(dureesBase.racines.actif * coefDecoupe * coefMasse * 0.8), activeHeat: true });
+                stepList.innerHTML += `<li>Étape 1 : Plonger les racines/patates dans l'eau bouillante.</li>`;
+            }
+            if (hasFruits) {
+                phases.push({ name: "Phase 2 : Ajouter les FRUITS / CHAIRS", dur: Math.round(dureesBase.fruits.actif * coefDecoupe * coefMasse * 0.67), activeHeat: true });
+                stepList.innerHTML += `<li>Étape 2 : Ajouter les poivrons/courgettes.</li>`;
+            }
+            if (hasFeuilles) {
+                stepList.innerHTML += `<li>Étape 3 : Ajouter les haricots/épinards, <strong>COUPER LE FEU et égoutter rapidement</strong>.</li>`;
+            } else {
+                stepList.innerHTML += `<li>Étape 3 : <strong>COUPER LE FEU et égoutter rapidement</strong>.</li>`;
+            }
+            phases.push({ name: "Phase Finale : Repos avant égouttage", dur: Math.round(300 * coefDecoupe), activeHeat: false });
 
         } else {
             // Vapeur / Casserole (défaut)
