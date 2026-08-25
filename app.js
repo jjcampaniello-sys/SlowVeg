@@ -261,6 +261,7 @@ function tick() {
             active = false;
             document.getElementById('btn').innerText = "Cuisson Terminée !";
             document.getElementById('btn').style.background = "#34495e";
+            faireBip(); // Déclenche le bip physique
             declencherSignalSonore("Cuisson terminée ! Vos légumes sont prêts.");
             enregistrerEconomies();
             // AJOUT : Libérer l'écran à la fin du minuteur
@@ -270,6 +271,26 @@ function tick() {
         }
     }
 }
+function faireBip() {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        
+        oscillator.type = 'sine'; // Type de son (sine, square, sawtooth, triangle)
+        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // Fréquence en Hz (880 = note La aiguë)
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); // Volume (0.1 = 10%)
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.3); // Durée du bip (0.3 seconde)
+    } catch (e) {
+        console.error("L'API Audio n'est pas supportée ou bloquée par le navigateur", e);
+    }
+}
+
 // Fonction asynchrone pour demander le blocage de la mise en veille
 async function requestWakeLock() {
     if ('wakeLock' in navigator) {
