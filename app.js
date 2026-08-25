@@ -35,7 +35,7 @@ function calculer() {
 
     phases = [];
     stepList.innerHTML = "";
-    let whSaved = Math.round((poids / 500) * 180);
+
 
     if (recipeType === 'mono') {
         const cat = document.getElementById('catLegume').value;
@@ -296,6 +296,12 @@ function afficherTotals() {
     document.getElementById('totalWh').innerText = Math.round(totals.wh);
     document.getElementById('totalEur').innerText = totals.eur.toFixed(2);
     document.getElementById('totalCo2').innerText = Math.round(totals.co2);
+}
+function resetTotals() {
+    if (confirm("Réinitialiser l'historique d'économies ?")) {
+        localStorage.removeItem('slowVeg_totals'); // Clé d'origine préservée
+        afficherTotals();
+    }
 }
 
 window.onload = () => { afficherTotals(); calculer(); };
