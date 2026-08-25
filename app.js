@@ -190,7 +190,7 @@ function calculer() {
             const volEauL = (volEauMl / 1000).toFixed(1);
 
             stepList.innerHTML += `<li>Verser environ <strong>${volEauL} L</strong> d'eau dans la casserole (juste assez pour couvrir les légumes).</li>`;
-            stepList.innerHTML += `<li>Utiliser une grande casserole d'eau bouillante salée.</li>`;
+            //stepList.innerHTML += `<li>Utiliser une grande casserole d'eau bouillante salée.</li>`;
             if (hasRacines) {
                 phases.push({ name: "Phase 1 : Mettre les RACINES", dur: Math.round(dureesBase.racines.actif * coefDecoupe * coefMasse * 0.8), activeHeat: true });
                 stepList.innerHTML += `<li>Étape 1 : Plonger les racines/patates dans l'eau bouillante.</li>`;
@@ -252,55 +252,80 @@ function tick() {
 
     if (remaining <= 0) {
         currentPhase++;
+        
         if (currentPhase < phases.length) {
-            declencherSignalSonore(phases[currentPhase].name);
+            // FIN DE PHASE ACTIVE : 2 bips aigus puis annonce
+            const message = phases[currentPhase].name;
+            faireDeuxBipsAigus(() => {
+                declencherSignalSonore(message);
+            });
+            
             sec = phases[currentPhase].dur;
             endTimestamp = Date.now() + sec * 1000;
         } else {
+            // FIN DE CUISSON PASSIVE (TOTALE) : 3 bips standards puis annonce
             clearInterval(inter);
             active = false;
+            
             document.getElementById('btn').innerText = "Cuisson Terminée !";
             document.getElementById('btn').style.background = "#34495e";
-            faireBip(); // Déclenche le bip physique
-            declencherSignalSonore("Cuisson terminée ! Vos légumes sont prêts.");
+            
+            faireTroisBips(() => {
+                declencherSignalSonore("Cuisson terminée ! Vos légumes sont prêts.");
+            });
+            
             enregistrerEconomies();
-            // AJOUT : Libérer l'écran à la fin du minuteur
-            if (wakeLock !== null) {
-                wakeLock.release().then(() => wakeLock = null);
-            }
         }
     }
 }
-function faireBip() {
+
+// Fonction générique pour jouer un bip à une fréquence et durée données
+function jouersoundBip(frequence = 880, duree = 0.15) {
     try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const oscillator = audioCtx.createOscillator();
         const gainNode = audioCtx.createGain();
         
-        oscillator.type = 'sine'; // Type de son (sine, square, sawtooth, triangle)
-        oscillator.frequency.setValueAtTime(980, audioCtx.currentTime); // Fréquence en Hz (880 = note La aiguë)
-        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime); // Volume (0.1 = 10%)
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(frequence, audioCtx.currentTime);
+        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
         
         oscillator.connect(gainNode);
         gainNode.connect(audioCtx.destination);
         
         oscillator.start();
-        oscillator.stop(audioCtx.currentTime + 0.3); // Durée du bip (0.3 seconde)
+        oscillator.stop(audioCtx.currentTime + duree);
     } catch (e) {
-        console.error("L'API Audio n'est pas supportée ou bloquée par le navigateur", e);
+        console.error("L'API Audio n'est pas supportée ou bloquée", e);
     }
 }
-// Répète le bip 3 fois
-function faireTroisBips() {
-    let bipsJoues = 0;
-    const intervalleBip = setInterval(() => {
-        faireBip(); // Appelle le bip unique
-        bipsJoues++;
-        if (bipsJoues >= 3) {
-            clearInterval(intervalleBip);
+
+// 2 Bips aigus pour la fin de la phase active (Chauffe)
+function faireDeuxBipsAigus(callback) {
+    let bips = 0;
+    const inter = setInterval(() => {
+        jouersoundBip(1200, 0.12); // Fréquence 1200 Hz (plus aiguë)
+        bips++;
+        if (bips >= 2) {
+            clearInterval(inter);
+            if (callback) setTimeout(callback, 300); // Laisse le dernier bip finir avant le message vocal
         }
-    }, 200); // Attend 200ms entre chaque bip
+    }, 180);
 }
+
+// 3 Bips standards pour la fin de la cuisson passive (Terminée)
+function faireTroisBips(callback) {
+    let bips = 0;
+    const inter = setInterval(() => {
+        jouersoundBip(880, 0.15); // Fréquence 880 Hz
+        bips++;
+        if (bips >= 3) {
+            clearInterval(inter);
+            if (callback) setTimeout(callback, 300);
+        }
+    }, 200);
+}
+
 // Fonction asynchrone pour demander le blocage de la mise en veille
 async function requestWakeLock() {
     if ('wakeLock' in navigator) {
