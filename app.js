@@ -326,7 +326,7 @@ function afficherTotals() {
 }
 function resetTotals() {
     if (confirm("Réinitialiser l'historique d'économies ?")) {
-        localStorage.removeItem('slowVeg_totals'); // Clé d'origine préservée
+        localStorage.removeItem('slowveg_totals'); // Clé d'origine préservée
         afficherTotals();
     }
 }
