@@ -24,6 +24,7 @@ function calculer() {
     const stepList = document.getElementById('prepSteps');
     
     let coefDecoupe = decoupe === 'fin' ? 0.7 : (decoupe === 'gros' ? 1.4 : 1.0);
+    let coefMasse = Math.sqrt(poids / 500, 0.3);
     phases = [];
     stepList.innerHTML = "";
     if (recipeType === 'mono' && document.getElementById('catLegume').value === 'surgeles') {
@@ -41,7 +42,7 @@ function calculer() {
 else if (cat === 'legumineuses') { tActif = 600; tPassif = 1800; whSaved += 200; }
 else if (cat === 'surgeles') { tActif = 120; tPassif = 240; }
 
-        tActif = Math.round(tActif * coefDecoupe);
+        tActif = Math.round(tActif * coefDecoupe * coefMasse);
         tPassif = Math.round(tPassif * coefDecoupe);
 
         if (methode === 'microonde') {
@@ -100,11 +101,11 @@ else if (cat === 'surgeles') { tActif = 120; tPassif = 240; }
             stepList.innerHTML += `<li>Placer les légumes dans un plat en VERRE ou CÉRAMIQUE (jamais de métal) muni d'une cloche.</li>`;
             stepList.innerHTML += `<li>⚡ Puissance requise : <strong>800W</strong> (durées calibrées pour cette puissance — ajustez le temps si votre micro-ondes est différent).</li>`;
             if (hasRacines) {
-                phases.push({ name: "Phase 1 : Mettre RACINES (Micro-ondes)", dur: Math.round(180 * coefDecoupe), activeHeat: true });
+                phases.push({ name: "Phase 1 : Mettre RACINES (Micro-ondes)", dur: Math.round(180 * coefDecoupe * coefMasse), activeHeat: true });
                 stepList.innerHTML += `<li>Étape 1 : Passer les racines au micro-ondes avec 2 c.à.s d'eau sous cloche.</li>`;
             }
             if (hasFruits) {
-                phases.push({ name: "Phase 2 : Ajouter FRUITS / CHAIRS", dur: Math.round(120 * coefDecoupe), activeHeat: true });
+                phases.push({ name: "Phase 2 : Ajouter FRUITS / CHAIRS", dur: Math.round(120 * coefDecoupe * coefMasse ), activeHeat: true });
                 stepList.innerHTML += `<li>Étape 2 : Ajouter les légumes de densité moyenne et relancer la chauffe sous cloche.</li>`;
             }
             if (hasFeuilles) {
@@ -113,30 +114,30 @@ else if (cat === 'surgeles') { tActif = 120; tPassif = 240; }
                 stepList.innerHTML += `<li>Étape 3 : <strong>ARRÊTER LE MICRO-ONDES</strong> et laisser fermé sous cloche.</li>`;
             }
 
-            phases.push({ name: "Phase Finale : Repos hermétique sous cloche", dur: Math.round(360 * coefDecoupe), activeHeat: false });
+            phases.push({ name: "Phase Finale : Repos hermétique sous cloche", dur: Math.round(360 * coefDecoupe * coefMasse), activeHeat: false });
 
         } else if (methode === 'four') {
             stepList.innerHTML += `<li>Utiliser un plat allant au four muni d'un couvercle ou papier d'aluminium.</li>`;
             if (hasRacines) {
-                phases.push({ name: "Phase 1 : Racines au four", dur: Math.round(600 * coefDecoupe), activeHeat: true });
+                phases.push({ name: "Phase 1 : Racines au four", dur: Math.round(600 * coefDecoupe * coefMasse), activeHeat: true });
                 stepList.innerHTML += `<li>Étape 1 : Enfourner les racines à 200°C dans le plat couvert.</li>`;
             }
             if (hasFruits || hasFeuilles) {
-                phases.push({ name: "Phase 2 : Ajouter le reste des légumes", dur: Math.round(300 * coefDecoupe), activeHeat: true });
+                phases.push({ name: "Phase 2 : Ajouter le reste des légumes", dur: Math.round(300 * coefDecoupe * coefMasse), activeHeat: true });
                 stepList.innerHTML += `<li>Étape 2 : Ajouter les autres légumes, re-couvrir et <strong>ÉTEINDRE LE FOUR</strong>.</li>`;
             }
-            phases.push({ name: "Phase Finale : Repos four éteint", dur: Math.round(900 * coefDecoupe), activeHeat: false });
+            phases.push({ name: "Phase Finale : Repos four éteint", dur: Math.round(900 * coefDecoupe * coefMasse), activeHeat: false });
 
         } else {
             // Modes Casserole / Poêle / Vapeur (Inox)
             stepList.innerHTML += `<li>Utiliser un faitout ou une casserole en inox à fond épais avec son couvercle.</li>`;
             
             if (hasRacines) {
-                phases.push({ name: "Phase 1 : Mettre les RACINES", dur: Math.round(240 * coefDecoupe), activeHeat: true });
+                phases.push({ name: "Phase 1 : Mettre les RACINES", dur: Math.round(240 * coefDecoupe * coefMasse), activeHeat: true });
                 stepList.innerHTML += `<li>Étape 1 : Mettre les racines/patates avec un fond d'eau, démarrer l'ébullition.</li>`;
             }
             if (hasFruits) {
-                phases.push({ name: "Phase 2 : Ajouter les FRUITS / CHAIRS", dur: Math.round(120 * coefDecoupe), activeHeat: true });
+                phases.push({ name: "Phase 2 : Ajouter les FRUITS / CHAIRS", dur: Math.round(120 * coefDecoupe * coefMasse), activeHeat: true });
                 stepList.innerHTML += `<li>Étape 2 : Au signal, ajouter les poivrons/courgettes, maintenir le feu doux.</li>`;
             }
             if (hasFeuilles) {
@@ -145,7 +146,7 @@ else if (cat === 'surgeles') { tActif = 120; tPassif = 240; }
                 stepList.innerHTML += `<li>Étape 3 : <strong>COUPER LE FEU</strong> et fermer hermétiquement.</li>`;
             }
 
-            phases.push({ name: "Phase Finale : Repos à l'étouffée (Feu coupé)", dur: Math.round(720 * coefDecoupe), activeHeat: false });
+            phases.push({ name: "Phase Finale : Repos à l'étouffée (Feu coupé)", dur: Math.round(720 * coefDecoupe * coefMasse), activeHeat: false });
         }
     }
 
