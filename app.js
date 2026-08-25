@@ -297,9 +297,9 @@ function toggle() {
         b.innerText = "Reprendre";
         b.style.background = "var(--primary)";
         // AJOUT : Désactiver le verrou si l'utilisateur met en pause
-        if (wakeLock !== null) {
-            wakeLock.release().then(() => wakeLock = null);
-        }
+       // if (wakeLock !== null) {
+          //  wakeLock.release().then(() => wakeLock = null);
+      //  }
     } else {
         active = true;
         b.innerText = "PAUSE";
