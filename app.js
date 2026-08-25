@@ -278,8 +278,8 @@ function faireBip() {
         const gainNode = audioCtx.createGain();
         
         oscillator.type = 'sine'; // Type de son (sine, square, sawtooth, triangle)
-        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // Fréquence en Hz (880 = note La aiguë)
-        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); // Volume (0.1 = 10%)
+        oscillator.frequency.setValueAtTime(980, audioCtx.currentTime); // Fréquence en Hz (880 = note La aiguë)
+        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime); // Volume (0.1 = 10%)
         
         oscillator.connect(gainNode);
         gainNode.connect(audioCtx.destination);
@@ -290,7 +290,17 @@ function faireBip() {
         console.error("L'API Audio n'est pas supportée ou bloquée par le navigateur", e);
     }
 }
-
+// Répète le bip 3 fois
+function faireTroisBips() {
+    let bipsJoues = 0;
+    const intervalleBip = setInterval(() => {
+        faireBip(); // Appelle le bip unique
+        bipsJoues++;
+        if (bipsJoues >= 3) {
+            clearInterval(intervalleBip);
+        }
+    }, 200); // Attend 200ms entre chaque bip
+}
 // Fonction asynchrone pour demander le blocage de la mise en veille
 async function requestWakeLock() {
     if ('wakeLock' in navigator) {
