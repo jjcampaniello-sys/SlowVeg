@@ -91,7 +91,11 @@ function calculer() {
             phases.push({ name: "Cuisson Passive (Masse chaude)", dur: tPassif, activeHeat: false });
 
         } else if (methode === 'eau') {
-            stepList.innerHTML += `<li>Plonger les légumes dans une grande quantité d'eau bouillante salée.</li>`;
+            // Calcul d'un volume d'eau optimisé (ex: 2 fois le volume/poids des légumes, minimum 500ml)
+            const volEauMl = Math.max(500, poids * 2); 
+            const volEauL = (volEauMl / 1000).toFixed(1);
+
+            stepList.innerHTML += `<li>Verser environ <strong>${volEauL} L</strong> d'eau dans la casserole (juste assez pour couvrir les légumes).</li>`;
             stepList.innerHTML += `<li>Maintenir l'ébullition ${Math.round(tActif/60)} min sous couvercle.</li>`;
             stepList.innerHTML += `<li><strong>COUPEZ LE FEU et égouttez rapidement</strong> pour limiter la perte de vitamines hydrosolubles.</li>`;
 
@@ -180,7 +184,12 @@ function calculer() {
             }
             phases.push({ name: "Phase Finale : Repos (Masse chaude)", dur: Math.round(900 * coefDecoupe), activeHeat: false });
 
-        } else if (methode === 'eau') {
+                } else if (methode === 'eau') {
+            // Calcul d'un volume d'eau optimisé (ex: 2 fois le volume/poids des légumes, minimum 500ml)
+            const volEauMl = Math.max(500, poids * 2); 
+            const volEauL = (volEauMl / 1000).toFixed(1);
+
+            stepList.innerHTML += `<li>Verser environ <strong>${volEauL} L</strong> d'eau dans la casserole (juste assez pour couvrir les légumes).</li>`;
             stepList.innerHTML += `<li>Utiliser une grande casserole d'eau bouillante salée.</li>`;
             if (hasRacines) {
                 phases.push({ name: "Phase 1 : Mettre les RACINES", dur: Math.round(dureesBase.racines.actif * coefDecoupe * coefMasse * 0.8), activeHeat: true });
