@@ -12,7 +12,7 @@ const dureesBase = {
     legumineuses: { actif: 600, passif: 1800 },
     surgeles:     { actif: 120, passif: 240 }
 };
-const coefMethodeWh  = { four:1.4, soupe: 1.1, poele: 0.9, microonde: 0.6, vapeur: 1.0, eau; 1.0};
+const coefMethodeWh  = { four:1.4, soupe: 1.1, poele: 0.9, microonde: 0.6, vapeur: 1.0, eau: 1.0};
 function setRecipeType(type) {
     recipeType = type;
     document.getElementById('btnMono').classList.toggle('active', type === 'mono');
@@ -30,7 +30,8 @@ function calculer() {
     const stepList = document.getElementById('prepSteps');
 
     let coefDecoupe = decoupe === 'fin' ? 0.7 : (decoupe === 'gros' ? 1.4 : 1.0);
-    let coefMasse = Math.pow(poids / 500) * 180 * (coefMethodeWh[methode] || 1.0) * coefDecoupe); // référence 500g, croissance douce
+    let coefMasse = Math.pow(poids / 500, 0.3);//référence 500g, croissance douce
+       let whSaved = Math.round((poids / 500) * 180 * (coefMethodeWh[methode] || 1.0) * coefDecoupe); // référence 500g, croissance douce
 
     phases = [];
     stepList.innerHTML = "";
