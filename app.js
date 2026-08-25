@@ -216,9 +216,9 @@ function calculer() {
         }
     }
 
+    const tarifKwh = parseFloat(document.getElementById('tarifKwh').value) || 0.25;
     document.getElementById('ecoWh').innerText = whSaved;
-    document.getElementById('ecoEur').innerText = (whSaved * 0.00025).toFixed(2);
-
+    document.getElementById('ecoEur').innerText = (whSaved * (tarifKwh / 1000)).toFixed(2);
     if (!active) {
         currentPhase = 0;
         sec = phases[0] ? phases[0].dur : 0;
