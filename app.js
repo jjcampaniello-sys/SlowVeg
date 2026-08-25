@@ -263,6 +263,9 @@ function tick() {
             document.getElementById('btn').style.background = "#34495e";
             declencherSignalSonore("Cuisson terminée ! Vos légumes sont prêts.");
             enregistrerEconomies();
+            // AJOUT : Libérer l'écran à la fin du minuteur
+            if (wakeLock !== null) {
+                wakeLock.release().then(() => wakeLock = null);
         }
     }
 }
@@ -292,12 +295,17 @@ function toggle() {
         active = false;
         b.innerText = "Reprendre";
         b.style.background = "var(--primary)";
+        // AJOUT : Désactiver le verrou si l'utilisateur met en pause
+        if (wakeLock !== null) {
+            wakeLock.release().then(() => wakeLock = null);
     } else {
         active = true;
         b.innerText = "PAUSE";
         b.style.background = "var(--red)";
         endTimestamp = Date.now() + sec * 1000;
         inter = setInterval(tick, 1000);
+            // AJOUT : Déclencher activement le verrou pour allumer l'écran
+        requestWakeLock();
     }
 }
 
