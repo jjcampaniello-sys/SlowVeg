@@ -266,6 +266,24 @@ function tick() {
         }
     }
 }
+// Fonction asynchrone pour demander le blocage de la mise en veille
+async function requestWakeLock() {
+    if ('wakeLock' in navigator) {
+        try {
+            wakeLock = await navigator.wakeLock.request('screen');
+            console.log("Wake Lock activé : l'écran restera allumé.");
+        } catch (err) {
+            console.error(`Impossible d'activer le Wake Lock : ${err.name}, ${err.message}`);
+        }
+    }
+}
+
+// Réactivation automatique si l'utilisateur change d'onglet et revient sur l'app
+document.addEventListener('visibilitychange', async () => {
+    if (wakeLock !== null && document.visibilityState === 'visible' && active) {
+        await requestWakeLock();
+    }
+});
 
 function toggle() {
     const b = document.getElementById('btn');
