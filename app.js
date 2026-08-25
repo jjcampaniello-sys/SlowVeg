@@ -266,6 +266,7 @@ function tick() {
             // AJOUT : Libérer l'écran à la fin du minuteur
             if (wakeLock !== null) {
                 wakeLock.release().then(() => wakeLock = null);
+            }
         }
     }
 }
@@ -298,6 +299,7 @@ function toggle() {
         // AJOUT : Désactiver le verrou si l'utilisateur met en pause
         if (wakeLock !== null) {
             wakeLock.release().then(() => wakeLock = null);
+        }
     } else {
         active = true;
         b.innerText = "PAUSE";
