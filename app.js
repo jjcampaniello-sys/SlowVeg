@@ -304,7 +304,7 @@ function faireDeuxBipsAigus(callback) {
             clearInterval(interBip);
             if (callback) setTimeout(callback, 300);
         }
-    }, 180);
+    }, 400);
 }
 
 function faireTroisBips(callback) {
@@ -316,7 +316,7 @@ function faireTroisBips(callback) {
             clearInterval(interBip);
             if (callback) setTimeout(callback, 300);
         }
-    }, 200);
+    }, 400);
 }
 
 async function requestWakeLock() {
