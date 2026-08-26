@@ -10,6 +10,7 @@ const dureesBase = {
     fruits:       { actif: 180, passif: 600 },
     feuilles:     { actif: 60,  passif: 180 },
     choux:        { actif: 150, passif: 450 },
+    fibreux:      { actif: 150, passif: 480 },
     legumineuses: { actif: 600, passif: 1800 },
     surgeles:     { actif: 120, passif: 240 }
 };
