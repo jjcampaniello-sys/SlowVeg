@@ -1,4 +1,4 @@
-const CACHE_NAME = 'slowveg-v4'; // ⚠️ incrémenter à chaque déploiement
+const CACHE_NAME = 'slowveg-v5'; // ⚠️ incrémenter à chaque déploiement
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
