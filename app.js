@@ -275,7 +275,7 @@ function tick() {
     }
 }
 
-function jouersoundBip(frequence = 880, duree = 0.15) {
+function jouersoundBip(frequence = 1000, duree = 0.25) {
     try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const oscillator = audioCtx.createOscillator();
@@ -298,7 +298,7 @@ function jouersoundBip(frequence = 880, duree = 0.15) {
 function faireDeuxBipsAigus(callback) {
     let bips = 0;
     const interBip = setInterval(() => {
-        jouersoundBip(1200, 0.12);
+        jouersoundBip(1000, 0.25);
         bips++;
         if (bips >= 2) {
             clearInterval(interBip);
@@ -310,7 +310,7 @@ function faireDeuxBipsAigus(callback) {
 function faireTroisBips(callback) {
     let bips = 0;
     const interBip = setInterval(() => {
-        jouersoundBip(880, 0.15);
+        jouersoundBip(1000, 0.25);
         bips++;
         if (bips >= 3) {
             clearInterval(interBip);
