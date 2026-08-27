@@ -118,6 +118,12 @@ function calculer() {
         const hasRacines = document.getElementById('hasRacines').checked;
         const hasFruits = document.getElementById('hasFruits').checked;
         const hasFeuilles = document.getElementById('hasFeuilles').checked;
+        const passifCandidates = [];
+        if (hasRacines) passifCandidates.push(dureesBase.racines.passif);
+        if (hasFruits) passifCandidates.push(dureesBase.fruits.passif);
+        if (hasFeuilles) passifCandidates.push(dureesBase.feuilles.passif);
+        const maxPassif = passifCandidates.length ? Math.max(...passifCandidates) : dureesBase.fruits.passif;
+        const coefPassifMulti = maxPassif / dureesBase.racines.passif; // 900s = référence des constantes existantes
 
         if (methode === 'microonde') {
             stepList.innerHTML += `<li>Placer les légumes dans un plat en VERRE ou CÉRAMIQUE (jamais de métal) muni d'une cloche.</li>`;
@@ -139,7 +145,7 @@ function calculer() {
                 stepList.innerHTML += `<li>Étape 3 : <strong>ARRÊTER LE MICRO-ONDES</strong> et laisser fermé sous cloche.</li>`;
             }
 
-            phases.push({ name: "Phase Finale : Repos hermétique sous cloche", dur: Math.round(360 * coefDecoupe), activeHeat: false });
+            phases.push({ name: "Phase Finale : Repos hermétique sous cloche", dur: Math.round(360 * coefDecoupe * coefPassifMulti), activeHeat: false});
 
         } else if (methode === 'four') {
             stepList.innerHTML += `<li>Utiliser un plat allant au four muni d'un couvercle ou papier d'aluminium.</li>`;
@@ -151,7 +157,7 @@ function calculer() {
                 phases.push({ name: "Phase 2 : Ajouter le reste des légumes", dur: Math.round(dureesBase.fruits.actif * coefDecoupe * coefMasse) + 300, activeHeat: true });
                 stepList.innerHTML += `<li>Étape 2 : Ajouter les autres légumes, re-couvrir et <strong>ÉTEINDRE LE FOUR</strong>.</li>`;
             }
-            phases.push({ name: "Phase Finale : Repos four éteint", dur: Math.round(900 * coefDecoupe), activeHeat: false });
+            phases.push({ name: "Phase Finale : Repos four éteint", dur: Math.round(900 * coefDecoupe * coefPassifMulti), activeHeat: false});
 
         } else if (methode === 'poele') {
             stepList.innerHTML += `<li>Utiliser une poêle ou un wok avec un filet d'huile.</li>`;
@@ -170,7 +176,7 @@ function calculer() {
             } else {
                 stepList.innerHTML += `<li>Étape 3 : Ajouter un filet d'eau, <strong>COUPER LE FEU</strong> et couvrir.</li>`;
             }
-            phases.push({ name: "Phase Finale : Repos à l'étouffée (Feu coupé)", dur: Math.round(480 * coefDecoupe), activeHeat: false });
+            phases.push({ name: "Phase Finale : Repos à l'étouffée (Feu coupé)", dur: Math.round(480 * coefDecoupe * coefPassifMulti), activeHeat: false });
 
         } else if (methode === 'soupe') {
             stepList.innerHTML += `<li>Utiliser un faitout avec le bouillon.</li>`;
@@ -189,7 +195,7 @@ function calculer() {
             } else {
                 stepList.innerHTML += `<li>Étape 3 : <strong>COUPER LE FEU</strong> et couvrir.</li>`;
             }
-            phases.push({ name: "Phase Finale : Repos (Masse chaude)", dur: Math.round(900 * coefDecoupe), activeHeat: false });
+            phases.push({ name: "Phase Finale : Repos (Masse chaude)", dur: Math.round(900 * coefDecoupe * coefPassifMulti), activeHeat: false });
 
         } else if (methode === 'eau') {
             const volEauMl = Math.max(500, poids * 2);
@@ -211,7 +217,7 @@ function calculer() {
             } else {
                 stepList.innerHTML += `<li>Étape 3 : <strong>COUPER LE FEU et égoutter rapidement</strong>.</li>`;
             }
-            phases.push({ name: "Phase Finale : Repos avant égouttage", dur: Math.round(300 * coefDecoupe), activeHeat: false });
+            phases.push({ name: "Phase Finale : Repos avant égouttage", dur: Math.round(300 * coefDecoupe * coefPassifMulti), activeHeat: false });
 
         } else {
             // Vapeur / Casserole (défaut)
@@ -231,7 +237,7 @@ function calculer() {
             } else {
                 stepList.innerHTML += `<li>Étape 3 : <strong>COUPER LE FEU</strong> et fermer hermétiquement.</li>`;
             }
-            phases.push({ name: "Phase Finale : Repos à l'étouffée (Feu coupé)", dur: Math.round(720 * coefDecoupe), activeHeat: false });
+            phases.push({ name: "Phase Finale : Repos à l'étouffée (Feu coupé)", dur: Math.round(720 * coefDecoupe * coefPassifMulti), activeHeat: false });
         }
     }
 
