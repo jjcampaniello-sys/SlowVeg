@@ -123,12 +123,14 @@ function calculer() {
             stepList.innerHTML += `<li>Placer les légumes dans un plat en VERRE ou CÉRAMIQUE (jamais de métal) muni d'une cloche.</li>`;
             stepList.innerHTML += `<li>⚡ Puissance requise : <strong>800W</strong> (durées calibrées pour cette puissance — ajustez le temps si votre micro-ondes est différent).</li>`;
 
+            let racinesDurMO = Math.round(dureesBase.racines.actif * coefDecoupe * coefMasse * 0.5);
+            let fruitsDurMO = hasFruits ? Math.round(dureesBase.fruits.actif * coefDecoupe * coefMasse * 0.5) : 0;
             if (hasRacines) {
-                phases.push({ name: "Phase 1 : Mettre RACINES (Micro-ondes)", dur: Math.round(dureesBase.racines.actif * coefDecoupe * coefMasse * 0.5), activeHeat: true });
+                phases.push({ name: "Phase 1 : Mettre RACINES (Micro-ondes)", dur: Math.max(40, racinesDurMO - fruitsDurMO), activeHeat: true });
                 stepList.innerHTML += `<li>Étape 1 : Passer les racines au micro-ondes avec 2 c.à.s d'eau sous cloche.</li>`;
             }
             if (hasFruits) {
-                phases.push({ name: "Phase 2 : Ajouter FRUITS / CHAIRS", dur: Math.round(dureesBase.fruits.actif * coefDecoupe * coefMasse * 0.5), activeHeat: true });
+                phases.push({ name: "Phase 2 : Ajouter FRUITS / CHAIRS", dur: fruitsDurMO, activeHeat: true });
                 stepList.innerHTML += `<li>Étape 2 : Ajouter les légumes de densité moyenne et relancer la chauffe sous cloche.</li>`;
             }
             if (hasFeuilles) {
@@ -153,12 +155,14 @@ function calculer() {
 
         } else if (methode === 'poele') {
             stepList.innerHTML += `<li>Utiliser une poêle ou un wok avec un filet d'huile.</li>`;
+            let racinesDurPoele = Math.round(180 * coefDecoupe * coefMasse);
+            let fruitsDurPoele = hasFruits ? Math.round(90 * coefDecoupe * coefMasse) : 0;
             if (hasRacines) {
-                phases.push({ name: "Phase 1 : Saisir les RACINES", dur: Math.round(180 * coefDecoupe * coefMasse), activeHeat: true });
+                phases.push({ name: "Phase 1 : Saisir les RACINES", dur: Math.max(30, racinesDurPoele - fruitsDurPoele), activeHeat: true });
                 stepList.innerHTML += `<li>Étape 1 : Saisir les racines/patates 2-3 min à feu vif.</li>`;
             }
             if (hasFruits) {
-                phases.push({ name: "Phase 2 : Ajouter les FRUITS / CHAIRS", dur: Math.round(90 * coefDecoupe * coefMasse), activeHeat: true });
+                phases.push({ name: "Phase 2 : Ajouter les FRUITS / CHAIRS", dur: fruitsDurPoele, activeHeat: true });
                 stepList.innerHTML += `<li>Étape 2 : Ajouter les poivrons/courgettes, poursuivre la saisie.</li>`;
             }
             if (hasFeuilles) {
@@ -170,12 +174,14 @@ function calculer() {
 
         } else if (methode === 'soupe') {
             stepList.innerHTML += `<li>Utiliser un faitout avec le bouillon.</li>`;
+           let racinesDurSoupe = Math.round(dureesBase.racines.actif * coefDecoupe * coefMasse);
+            let fruitsDurSoupe = hasFruits ? Math.round(dureesBase.fruits.actif * coefDecoupe * coefMasse * 0.67) : 0;
             if (hasRacines) {
-                phases.push({ name: "Phase 1 : Mettre les RACINES", dur: Math.round(dureesBase.racines.actif * coefDecoupe * coefMasse), activeHeat: true });
+                phases.push({ name: "Phase 1 : Mettre les RACINES", dur: Math.max(30, racinesDurSoupe - fruitsDurSoupe), activeHeat: true });
                 stepList.innerHTML += `<li>Étape 1 : Mettre les racines dans le bouillon, porter à ébullition.</li>`;
             }
             if (hasFruits) {
-                phases.push({ name: "Phase 2 : Ajouter les FRUITS / CHAIRS", dur: Math.round(dureesBase.fruits.actif * coefDecoupe * coefMasse * 0.67), activeHeat: true });
+                phases.push({ name: "Phase 2 : Ajouter les FRUITS / CHAIRS", dur: fruitsDurSoupe, activeHeat: true });
                 stepList.innerHTML += `<li>Étape 2 : Ajouter les légumes de densité moyenne.</li>`;
             }
             if (hasFeuilles) {
@@ -190,12 +196,14 @@ function calculer() {
             const volEauL = (volEauMl / 1000).toFixed(1);
 
             stepList.innerHTML += `<li>Verser environ <strong>${volEauL} L</strong> d'eau dans la casserole (juste assez pour couvrir les légumes).</li>`;
+            let racinesDurEau = Math.round(dureesBase.racines.actif * coefDecoupe * coefMasse * 0.8);
+            let fruitsDurEau = hasFruits ? Math.round(dureesBase.fruits.actif * coefDecoupe * coefMasse * 0.67) : 0;
             if (hasRacines) {
-                phases.push({ name: "Phase 1 : Mettre les RACINES", dur: Math.round(dureesBase.racines.actif * coefDecoupe * coefMasse * 0.8), activeHeat: true });
+                phases.push({ name: "Phase 1 : Mettre les RACINES", dur: Math.max(30, racinesDurEau - fruitsDurEau), activeHeat: true });
                 stepList.innerHTML += `<li>Étape 1 : Plonger les racines/patates dans l'eau bouillante.</li>`;
             }
             if (hasFruits) {
-                phases.push({ name: "Phase 2 : Ajouter les FRUITS / CHAIRS", dur: Math.round(dureesBase.fruits.actif * coefDecoupe * coefMasse * 0.67), activeHeat: true });
+                phases.push({ name: "Phase 2 : Ajouter les FRUITS / CHAIRS", dur: fruitsDurEau, activeHeat: true });
                 stepList.innerHTML += `<li>Étape 2 : Ajouter les poivrons/courgettes.</li>`;
             }
             if (hasFeuilles) {
@@ -208,12 +216,14 @@ function calculer() {
         } else {
             // Vapeur / Casserole (défaut)
             stepList.innerHTML += `<li>Utiliser un faitout ou une casserole en inox à fond épais avec son couvercle.</li>`;
+           let racinesDurTarget = Math.round(dureesBase.racines.actif * coefDecoupe * coefMasse * 0.8);
+            let fruitsDurVap = hasFruits ? Math.round(dureesBase.fruits.actif * coefDecoupe * coefMasse * 0.67) : 0;
             if (hasRacines) {
-                phases.push({ name: "Phase 1 : Mettre les RACINES", dur: Math.round(dureesBase.racines.actif * coefDecoupe * coefMasse * 0.8), activeHeat: true });
+                phases.push({ name: "Phase 1 : Mettre les RACINES", dur: Math.max(30, racinesDurTarget - fruitsDurVap), activeHeat: true });
                 stepList.innerHTML += `<li>Étape 1 : Mettre les racines/patates avec un fond d'eau, démarrer l'ébullition.</li>`;
             }
             if (hasFruits) {
-                phases.push({ name: "Phase 2 : Ajouter les FRUITS / CHAIRS", dur: Math.round(dureesBase.fruits.actif * coefDecoupe * coefMasse * 0.67), activeHeat: true });
+                phases.push({ name: "Phase 2 : Ajouter les FRUITS / CHAIRS", dur: fruitsDurVap, activeHeat: true });
                 stepList.innerHTML += `<li>Étape 2 : Au signal, ajouter les poivrons/courgettes, maintenir le feu doux.</li>`;
             }
             if (hasFeuilles) {
