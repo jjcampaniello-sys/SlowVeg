@@ -108,7 +108,7 @@ function calculer() {
 
             stepList.innerHTML += `<li>Verser environ <strong>${volEauL} L</strong> d'eau dans la casserole (juste assez pour couvrir les légumes).</li>`;
             stepList.innerHTML += `<li>Maintenir l'ébullition ${Math.round(tActif/60)} min sous couvercle.</li>`;
-            stepList.innerHTML += `<li><strong>COUPEZ LE FEU et égouttez rapidement</strong> pour limiter la perte de vitamines hydrosolubles.</li>`;
+            stepList.innerHTML += `<li><strong>COUPEZ LE FEU et égouttez rapidement</strong> pour limiter la perte de vitamines hydrosolubles, après la cuisson passive.</li>`;
 
             phases.push({ name: "Cuisson Active (Eau bouillante)", dur: tActif, activeHeat: true });
             phases.push({ name: "Cuisson Passive (Repos avant égouttage)", dur: tPassif, activeHeat: false });
