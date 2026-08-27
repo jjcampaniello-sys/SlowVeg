@@ -98,3 +98,20 @@ let racinesDurMO = Math.round(dureesBase.racines.actif * coefDecoupe * coefMasse
                 phases.push({ name: "Phase 2 : Ajouter FRUITS / CHAIRS", dur: fruitsDurMO, activeHeat: true });
                 stepList.innerHTML += `<li>Étape 2 : Ajouter les légumes de densité moyenne et relancer la chauffe sous cloche.</li>`;
             }
+
+//=======================
+Ajouter juste après const hasFeuilles = document.getElementById('hasFeuilles').checked; :
+const passifCandidates = [];
+        if (hasRacines) passifCandidates.push(dureesBase.racines.passif);
+        if (hasFruits) passifCandidates.push(dureesBase.fruits.passif);
+        if (hasFeuilles) passifCandidates.push(dureesBase.feuilles.passif);
+        const maxPassif = passifCandidates.length ? Math.max(...passifCandidates) : dureesBase.fruits.passif;
+        const coefPassifMulti = maxPassif / dureesBase.racines.passif; // 900s = référence des constantes existantes
+
+Puis, dans chaque branche, remplacer la ligne de phases.push({ name: "Phase Finale..." ... }) :
+microonde — dur: Math.round(360 * coefDecoupe) → dur: Math.round(360 * coefDecoupe * coefPassifMulti)
+four — dur: Math.round(900 * coefDecoupe) → dur: Math.round(900 * coefDecoupe * coefPassifMulti)
+poele — dur: Math.round(480 * coefDecoupe) → dur: Math.round(480 * coefDecoupe * coefPassifMulti)
+soupe — dur: Math.round(900 * coefDecoupe) → dur: Math.round(900 * coefDecoupe * coefPassifMulti)
+eau — dur: Math.round(300 * coefDecoupe) → dur: Math.round(300 * coefDecoupe * coefPassifMulti)
+vapeur/défaut — dur: Math.round(720 * coefDecoupe) → dur: Math.round(720 * coefDecoupe * coefPassifMulti)
