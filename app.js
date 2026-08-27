@@ -135,27 +135,55 @@ function calculer() {
         const maxPassif = passifCandidates.length ? Math.max(...passifCandidates) : dureesBase.fruits.passif;
         const coefPassifMulti = maxPassif / dureesBase.racines.passif; // 900s = référence des constantes existantes
 
-        if (methode === 'microonde') {
+                if (methode === 'microonde') {
             stepList.innerHTML += `<li>Placer les légumes dans un plat en VERRE ou CÉRAMIQUE (jamais de métal) muni d'une cloche.</li>`;
             stepList.innerHTML += `<li>⚡ Puissance requise : <strong>800W</strong> (durées calibrées pour cette puissance — ajustez le temps si votre micro-ondes est différent).</li>`;
 
-            let racinesDurMO = Math.round(dureesBase.racines.actif * coefDecoupe * coefMasse * 0.5);
-            let fruitsDurMO = hasFruits ? Math.round(dureesBase.fruits.actif * coefDecoupe * coefMasse * 0.5) : 0;
+            // 1. Détermination dynamique du "Légume Maître" pour la Phase 1 (le plus dense)
+            let principalDurMO = 0;
+            let principalNom = "";
+            let etape1Texte = "";
+
             if (hasRacines) {
-                phases.push({ name: "Phase 1 : Mettre RACINES (Micro-ondes)", dur: Math.max(40, racinesDurMO - fruitsDurMO), activeHeat: true });
-                stepList.innerHTML += `<li>Étape 1 : Passer les racines au micro-ondes avec 2 c.à.s d'eau sous cloche.</li>`;
+                principalDurMO = Math.round(dureesBase.racines.actif * coefDecoupe * coefMasse * 0.5);
+                principalNom = "RACINES";
+                etape1Texte = "<li>Étape 1 : Passer les racines au micro-ondes avec 2 c.à.s d'eau sous cloche.</li>";
+            } else if (hasChoux) { // <-- Votre condition de secours pour le chou
+                principalDurMO = Math.round(dureesBase.choux.actif * coefDecoupe * coefMasse * 0.5);
+                principalNom = "CHOUX";
+                etape1Texte = "<li>Étape 1 : Passer les choux au micro-ondes avec 2 c.à.s d'eau sous cloche.</li>";
+            } else if (hasFibreux) {
+                principalDurMO = Math.round(dureesBase.fibreux.actif * coefDecoupe * coefMasse * 0.5);
+                principalNom = "LÉGUMES FIBREUX";
+                etape1Texte = "<li>Étape 1 : Passer les légumes fibreux au micro-ondes avec 2 c.à.s d'eau sous cloche.</li>";
             }
+
+            // 2. Détermination du légume de Phase 2 (le légume intermédiaire)
+            let fruitsDurMO = hasFruits ? Math.round(dureesBase.fruits.actif * coefDecoupe * coefMasse * 0.5) : 0;
+
+            // 3. Exécution de la Phase 1 (avec votre logique de soustraction)
+            if (principalDurMO > 0) {
+                // Si les fruits sont plus courts que le légume principal, on soustrait. Sinon, sécurité à 40s.
+                let durPhase1 = Math.max(40, principalDurMO - fruitsDurMO);
+                phases.push({ name: `Phase 1 : Mettre ${principalNom} (Micro-ondes)`, dur: durPhase1, activeHeat: true });
+                stepList.innerHTML += etape1Texte;
+            }
+
+            // 4. Exécution de la Phase 2 (Fruits / Chairs)
             if (hasFruits) {
                 phases.push({ name: "Phase 2 : Ajouter FRUITS / CHAIRS", dur: fruitsDurMO, activeHeat: true });
-                stepList.innerHTML += `<li>Étape 2 : Ajouter les légumes de densité moyenne et relancer la chauffe sous cloche.</li>`;
+                stepList.innerHTML += `<li>Étape 2 : Ajouter les légumes de densité moyenne (fruits/chairs) et relancer la chauffe sous cloche.</li>`;
             }
+
+            // 5. Phase 3 (Feuilles et légumes fragiles à l'arrêt)
             if (hasFeuilles) {
                 stepList.innerHTML += `<li>Étape 3 : Ajouter les légumes fragiles / feuilles, <strong>ARRÊTER LE MICRO-ONDES</strong> et fermer la cloche.</li>`;
             } else {
                 stepList.innerHTML += `<li>Étape 3 : <strong>ARRÊTER LE MICRO-ONDES</strong> et laisser fermé sous cloche.</li>`;
             }
 
-            phases.push({ name: "Phase Finale : Repos hermétique sous cloche", dur: Math.round(360 * coefDecoupe * coefPassifMulti), activeHeat: false});
+            // 6. Phase Finale (Votre formule de repos dynamique approuvée)
+            phases.push({ name: "Phase Finale : Repos hermétique sous cloche", dur: Math.round(360 * coefDecoupe * coefPassifMulti), activeHeat: false });
 
        } else if (methode === 'four') {
     stepList.innerHTML += `<li>Utiliser un plat allant au four muni d'un couvercle ou papier d'aluminium.</li>`;
