@@ -55,11 +55,21 @@ function calculer() {
 
         if (methode === 'microonde') {
             tActif = Math.max(30, Math.round(tActif * 0.5));
-            tPassif = Math.round(tPassif * 0.6);
+             // 🛠️ AJUSTEMENT : On augmente le repos pour les catégories denses (choux, fibreux, racines)
+            // Au lieu d'un * 0.6 fixe, on donne plus de temps pour attendrir les fibres sans ondes actives
+            if (cat === 'choux' || cat === 'fibreux' || cat === 'racines') {
+                tPassif = Math.round(tPassif * 0.9); // Repos allongé (ex: 405s soit ~6 min 45s pour le chou)
+            } else {
+                tPassif = Math.round(tPassif * 0.6); // Reste inchangé pour les légumes rapides (feuilles, fruits)
+            }
+           // tPassif = Math.round(tPassif * 0.6);
 
             stepList.innerHTML += `<li>Placer les légumes dans un plat en VERRE ou CÉRAMIQUE (sans métal) avec 2-3 c.à.s d'eau.</li>`;
             stepList.innerHTML += `<li>Couvrir impérativement avec une cloche plastique.</li>`;
             stepList.innerHTML += `<li>⚡ Puissance requise : <strong>800W</strong> (durées calibrées pour cette puissance — ajustez le temps si votre micro-ondes est différent).</li>`;
+            if (cat === 'choux') {
+                stepList.innerHTML += `<li>💡 <strong>Astuce Digestion :</strong> Si vous préférez les légumes de tupe choux très fondant et facile à digérer, prolongez le repos final de 2 minutes supplémentaires sous la cloche sans l'ouvrir.</li>`;
+            }
             stepList.innerHTML += `<li>Chauffer à 800W pendant ${Math.floor(tActif/60)} min ${tActif%60} s.</li>`;
             stepList.innerHTML += `<li><strong>LAISSER REPOSER SANS OUVRIR</strong> (la vapeur piégée termine la cuisson).</li>`;
 
