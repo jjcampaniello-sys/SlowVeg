@@ -136,3 +136,47 @@ vapeur/défaut — dur: Math.round(720 * coefDecoupe) → dur: Math.round(720 * 
                 stepList.innerHTML += `<li>Étape 3 : <strong>ÉTEINDRE LE FOUR</strong>.</li>`;
             }
             phases.push({ name: "Phase Finale : Repos four éteint", dur: Math.round(900 * coefDecoupe * coefPassifMulti), activeHeat: false });
+
+//******************************************************************************************************
+} else if (methode === 'four') {
+    stepList.innerHTML += `<li>Utiliser un plat allant au four muni d'un couvercle ou papier d'aluminium.</li>`;
+    
+    let fourPreheat = 300; // Bonus de préchauffage / ouverture de porte
+    
+    // 1. Calcul des temps bruts pour chaque catégorie
+    let tRacinesPur = Math.round(dureesBase.racines.actif * coefDecoupe * coefMasse);
+    let tFruitsPur  = Math.round(dureesBase.fruits.actif * coefDecoupe * coefMasse);
+
+    // 2. Application de votre logique de soustraction échelonnée
+    if (hasRacines && hasFruits) {
+        // Les racines cuisent d'abord SEULES pendant la différence de temps
+        let diffTemps = Math.max(30, tRacinesPur - tFruitsPur);
+        phases.push({ name: "Phase 1 : Racines au four (Démarrage)", dur: diffTemps + fourPreheat, activeHeat: true });
+        stepList.innerHTML += `<li>Étape 1 : Enfourner les racines à 200°C dans le plat couvert.</li>`;
+        
+        // Les fruits sont ajoutés, et TOUT LE MONDE cuit ensemble pendant le reste du temps
+        phases.push({ name: "Phase 2 : Ajouter les FRUITS / CHAIRS", dur: tFruitsPur, activeHeat: true });
+        stepList.innerHTML += `<li>Étape 2 : Ajouter les fruits/chairs dans le plat et re-couvrir.</li>`;
+    } else {
+        // Cas classique si un seul des deux est coché
+        if (hasRacines) {
+            phases.push({ name: "Phase 1 : Racines au four", dur: tRacinesPur + fourPreheat, activeHeat: true });
+            stepList.innerHTML += `<li>Étape 1 : Enfourner les racines à 200°C dans le plat couvert.</li>`;
+        }
+        if (hasFruits) {
+            phases.push({ name: "Phase 1 : Fruits au four", dur: tFruitsPur + fourPreheat, activeHeat: true });
+            stepList.innerHTML += `<li>Étape 1 : Enfourner les fruits/chairs à 200°C dans le plat couvert.</li>`;
+        }
+    }
+
+    // 3. Gestion sécurisée des feuilles (Four éteint)
+    if (hasFeuilles) {
+        stepList.innerHTML += `<li>Étape 3 : Ajouter les feuilles/herbes, re-couvrir et <strong>ÉTEINDRE LE FOUR</strong> (chaleur résiduelle uniquement, pour éviter qu'elles ne brûlent).</li>`;
+    } else {
+        stepList.innerHTML += `<li>Étape 3 : <strong>ÉTEINDRE LE FOUR</strong>.</li>`;
+    }
+
+    // 4. Votre formule de repos dynamique proportionnel
+    phases.push({ name: "Phase Finale : Repos four éteint", dur: Math.round(900 * coefDecoupe * coefPassifMulti), activeHeat: false });
+}
+
