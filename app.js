@@ -11,7 +11,8 @@ const dureesBase = {
     feuilles:     { actif: 60,  passif: 180 },
     choux:        { actif: 150, passif: 450 },
     fibreux:      { actif: 150, passif: 480 },
-    legumineuses: { actif: 600, passif: 1800 },
+    lentilles:              { actif: 900,  passif: 600 },  // lentilles, pois cassés — pas de trempage
+    legumineuses_trempees:  { actif: 1200, passif: 900 },  // pois chiches, haricots secs — trempés 8-12h
     surgeles:     { actif: 240, passif: 300 }
 };
 
@@ -44,7 +45,11 @@ function calculer() {
         const cat = document.getElementById('catLegume').value;
         let base = dureesBase[cat] || dureesBase.feuilles;
         let tActif = base.actif, tPassif = base.passif;
-        if (cat === 'legumineuses') whSaved += 200;
+        if (cat === 'lentilles' || cat === 'legumineuses_trempees') whSaved += 200;
+
+        if (cat === 'legumineuses_trempees') {
+            stepList.innerHTML += `<li>💡 <strong>Trempage requis :</strong> laisser tremper 8-12h dans l'eau froide avec 1 c.à.c de bicarbonate (facilite la cuisson et la digestion), puis rincer avant cuisson.</li>`;
+        }
 
         if (cat === 'surgeles') {
             stepList.innerHTML += `<li>💡 <strong>Conseil :</strong> ne pas décongeler au préalable. La vapeur ou le micro-ondes donnent les meilleurs résultats pour les surgelés${methode === 'four' ? ' — le four est peu adapté ici (préchauffe énergivore pour un temps de cuisson court)' : ''}.</li>`;
