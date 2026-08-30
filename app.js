@@ -317,7 +317,7 @@ function calculer() {
     const tarifKwh = parseFloat(document.getElementById('tarifKwh').value) || 0.25;
     document.getElementById('ecoWh').innerText = whSaved;
     document.getElementById('ecoEur').innerText = (whSaved * (tarifKwh / 1000)).toFixed(2);
-
+    document.getElementById('ecoCo2').innerText = Math.round(whSaved * gCO2ParKwh / 1000);
     if (!active) {
         currentPhase = 0;
         sec = (phases && phases.length > 0) ? phases[0].dur : 0;
