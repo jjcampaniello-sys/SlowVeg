@@ -17,7 +17,7 @@ const dureesBase = {
 };
 
 const coefMethodeWh = { four: 1.4, soupe: 1.1, poele: 0.9, microonde: 0.6, vapeur: 1.0, eau: 1.0 };
-
+const rendementMicroonde = 0.65; // efficacité électrique réelle d'un magnétron domestique (~65%), le reste part en pertes thermiques
 function setRecipeType(type) {
     recipeType = type;
     document.getElementById('btnMono').classList.toggle('active', type === 'mono');
@@ -36,8 +36,7 @@ function calculer() {
 
     let coefDecoupe = decoupe === 'fin' ? 0.7 : (decoupe === 'gros' ? 1.4 : 1.0);
     let coefMasse = Math.pow(poids / 500, 0.6); // référence 500g, croissance douce
-    let whSaved = Math.round((poids / 500) * 180 * (coefMethodeWh[methode] || 1.0) * coefDecoupe);
-
+    let whSaved = Math.round((poids / 500) * 180 * (coefMethodeWh[methode] || 1.0) * coefDecoupe * (methode === 'microonde' ? rendementMicroonde : 1));
     phases = [];
     stepList.innerHTML = "";
 
