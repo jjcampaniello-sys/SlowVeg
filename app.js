@@ -9,7 +9,7 @@ const dureesBase = {
     racines:      { actif: 300, passif: 900 },
     fruits:       { actif: 180, passif: 600 },
     feuilles:     { actif: 60,  passif: 180 },
-    choux:        { actif: 300, passif: 450 },
+    choux:        { actif: 600, passif: 450 },
     fibreux:      { actif: 150, passif: 480 },
     lentilles:              { actif: 900,  passif: 600 },  // lentilles, pois cassés — pas de trempage
     legumineuses_trempees:  { actif: 1200, passif: 900 },  // pois chiches, haricots secs — trempés 8-12h
